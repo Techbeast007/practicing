@@ -22,10 +22,14 @@ rl.on('line', (line) => {
 });
 
 const fibonacci=(n)=>{
+  let n3 = n%60==0?60:n%60  
     last=BigInt(0)
     current = BigInt(1);
+    if(n<=1){
+      return n
+    }
     if(n>60){
-    for(let i=2;i<=n/60;i++){
+    for(let i=2;i<=n3;i++){
         let temp=last+current
         last = current
         current = temp
