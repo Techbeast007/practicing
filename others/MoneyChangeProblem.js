@@ -19,7 +19,7 @@ rl.on('line', (line) => {
 });
 
 function moneyChange(num) {
-  let change = [6, 4, 1]
+  let change = [10, 5, 1]
   let count = 0;
 
   for (let i = 0; i < change.length; i++) {

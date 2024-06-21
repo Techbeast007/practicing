@@ -8,47 +8,53 @@ var rl = readline.createInterface({
 });
 
 let inputCount = 0;
-let arrays = [];
+let n, W;
+let costs = [];
+let weights = [];
 
 rl.on('line', (line) => {
   line = line.trim();
   
-  // Assuming each line has three space-separated integers
-  let numbers = line.split(' ').map(num => parseInt(num, 10)).filter(num => !isNaN(num));
-
-  if (numbers.length === 3) {
-    arrays.push(numbers);
-    inputCount++;
+  if (inputCount === 0) {
+    // Read n and W from the first line
+    [n, W] = line.split(' ').map(num => parseInt(num, 10));
+  } else {
+    // Read costs and weights from subsequent lines
+    let [ci, wi] = line.split(' ').map(num => parseInt(num, 10));
+    costs.push(ci);
+    weights.push(wi);
   }
 
-  if (inputCount === 2) {
-    let result = lootproblem(arrays[0],arrays[1]);
+  inputCount++;
+  
+  // If we've read all lines (n compounds)
+  if (inputCount === n + 1) {
+    let result = lootProblem(costs, weights, W);
     console.log(result);
     process.exit();
   }
 });
 
 
-let lootproblem=(v,w)=>{
-   let Wmax = 9;
+let lootProblem=(v,w,Wmax)=>{
     let totalValue= 0;
 
-    vperw = v.map((vi,index)=>{
-        return vi/w[index]
-    })
-    vperw.sort((a,b)=>b-a)
+    let items = v.map((vi, index) => ({
+      value: vi,
+      weight: w[index],
+      valuePerWeight: vi / w[index]
+    }));
+    items.sort((a,b)=>b.valuePerWeight-a.valuePerWeight)
 
-    for(let i=0;i<vperw.length;i++){
+    for(let i=0;i<items.length;i++){
    
      
-            if(Wmax-w[i]>0){
-                Wmax -= w[i]
-                totalValue = totalValue+w[i]*vperw[i]
+            if(Wmax-items[i].weight>0){
+                Wmax -= items[i].weight
+                totalValue = totalValue+items[i].weight*items[i].valuePerWeight
 
             } else {
-                console.log("weight2",Wmax)
-                console.log(i)
-                totalValue = totalValue+Wmax*vperw[i]
+                totalValue = totalValue+Wmax*items[i].valuePerWeight
                 Wmax = Wmax-Wmax
 
             }
